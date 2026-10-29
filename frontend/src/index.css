@@ -1,0 +1,269 @@
+/* Sicredi Guardião 3.0 — Global Styles with Light & Dark Mode */
+
+/* =========================================================
+   Light Mode (default)
+   ========================================================= */
+:root,
+[data-theme="light"] {
+  /* Brand greens */
+  --green-900: #003D1C;
+  --green-800: #004D23;
+  --green-700: #005B2B;
+  --green-600: #007A3A;
+  --green-500: #00A650;
+  --green-400: #34C97A;
+  --green-300: #6DDBA0;
+  --green-200: #B3EFCB;
+  --green-100: #E8F5EE;
+  --green-50:  #F4FAF6;
+
+  /* Surface & text */
+  --bg:         #f4faf6;
+  --surface:    #ffffff;
+  --surface-2:  #f7f8fa;
+  --surface-3:  #f0f2f5;
+  --border:     #e5e7eb;
+  --border-2:   #d1d5db;
+
+  --text-primary:   #1f2328;
+  --text-secondary: #57606a;
+  --text-muted:     #8b949e;
+  --text-on-green:  #ffffff;
+
+  /* Semantic */
+  --red-600:    #dc2626;
+  --red-100:    #fef2f2;
+  --red-200:    #fecaca;
+  --yellow-600: #d97706;
+  --yellow-100: #fffbeb;
+  --yellow-200: #fde68a;
+  --blue-600:   #2563eb;
+  --blue-100:   #eff6ff;
+  --blue-200:   #bfdbfe;
+
+  /* Sidebar */
+  --sidebar-bg:         #005B2B;
+  --sidebar-text:       rgba(255,255,255,0.9);
+  --sidebar-muted:      rgba(255,255,255,0.5);
+  --sidebar-active-bg:  rgba(255,255,255,0.15);
+  --sidebar-hover-bg:   rgba(255,255,255,0.08);
+  --sidebar-border:     rgba(255,255,255,0.1);
+
+  --sidebar-analyst-bg:       #1a1f2e;
+  --sidebar-analyst-active:   rgba(0, 166, 80, 0.2);
+  --sidebar-analyst-indicator:#00A650;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --font: -apple-system, "Segoe UI", system-ui, sans-serif;
+  --transition: 150ms ease;
+
+  /* Chart colors */
+  --chart-1: #005B2B;
+  --chart-2: #00A650;
+  --chart-3: #dc2626;
+  --chart-4: #d97706;
+  --chart-5: #2563eb;
+}
+
+/* =========================================================
+   Dark Mode
+   ========================================================= */
+[data-theme="dark"] {
+  --green-900: #003D1C;
+  --green-800: #004D23;
+  --green-700: #006B32;
+  --green-600: #008A42;
+  --green-500: #00C45E;
+  --green-400: #34D47A;
+  --green-300: #6DE8A0;
+  --green-200: #A3F0C5;
+  --green-100: #D1F7E4;
+  --green-50:  #E8FBF1;
+
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface-2: #1c2128;
+  --surface-3: #22272e;
+  --border:    #30363d;
+  --border-2:  #444c56;
+
+  --text-primary:   #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted:     #6e7681;
+  --text-on-green:  #ffffff;
+
+  --red-600:    #f87171;
+  --red-100:    #2d1515;
+  --red-200:    #5c2222;
+  --yellow-600: #fbbf24;
+  --yellow-100: #2d2210;
+  --yellow-200: #5c4420;
+  --blue-600:   #60a5fa;
+  --blue-100:   #0d1f3c;
+  --blue-200:   #1a3a6e;
+
+  --sidebar-bg:        #0d1117;
+  --sidebar-text:      rgba(230,237,243,0.9);
+  --sidebar-muted:     rgba(230,237,243,0.4);
+  --sidebar-active-bg: rgba(0,164,80,0.18);
+  --sidebar-hover-bg:  rgba(255,255,255,0.05);
+  --sidebar-border:    rgba(255,255,255,0.08);
+
+  --sidebar-analyst-bg:       #0d1117;
+  --sidebar-analyst-active:   rgba(0, 196, 94, 0.18);
+  --sidebar-analyst-indicator:#00C45E;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.6);
+
+  --chart-1: #00C45E;
+  --chart-2: #34D47A;
+  --chart-3: #f87171;
+  --chart-4: #fbbf24;
+  --chart-5: #60a5fa;
+}
+
+/* =========================================================
+   Reset & Base
+   ========================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: var(--font);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* Smooth theme transitions — respect prefers-reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+a {
+  color: var(--green-600);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: var(--font);
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   Scrollbar
+   ========================================================= */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* =========================================================
+   Animations
+   ========================================================= */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+/* =========================================================
+   Utilities
+   ========================================================= */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease both;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.2s ease both;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 37%,
+    var(--surface-2) 63%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+}

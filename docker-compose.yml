@@ -1,0 +1,84 @@
+version: '3.9'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Backend — FastAPI
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: guardiao-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=sqlite:///./guardiao_v2.db
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-use-a-long-random-string}
+      - AI_PROVIDER=${AI_PROVIDER:-ollama}
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2:3b}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - CORS_ORIGINS=["http://localhost:5173","http://localhost:3000","http://frontend:3000"]
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      - ./backend:/app
+      - guardiao-db:/app/data
+    ports:
+      - "8000:8000"
+    networks:
+      - guardiao-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      ollama:
+        condition: service_started
+
+  # ---------------------------------------------------------------------------
+  # Frontend — React + Vite (production build served by nginx)
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: guardiao-frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://backend:8000
+    ports:
+      - "3000:80"
+    networks:
+      - guardiao-net
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # Ollama — Local LLM inference
+  # ---------------------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: guardiao-ollama
+    restart: unless-stopped
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - guardiao-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  guardiao-net:
+    driver: bridge
+
+volumes:
+  guardiao-db:
+  ollama-models:
