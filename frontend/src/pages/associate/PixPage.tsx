@@ -3,6 +3,7 @@
  */
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { CheckCircle2, Clock, ShieldX, XCircle, AlertTriangle } from 'lucide-react'
 import AssociateLayout from '../../components/layout/AssociateLayout'
 import { Card, Button, Input, AlertBox, Spinner, formatCurrency } from '../../components/ui/index'
 import { createPixTransfer } from '../../api/client'
@@ -68,10 +69,10 @@ export default function PixPage() {
 
   return (
     <AssociateLayout>
-      <div style={{ maxWidth: 480, margin: '0 auto' }}>
+      <div style={{ maxWidth: 480, margin: '0 auto', width: '100%' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1f2328' }}>Fazer PIX</h1>
-          <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>Transferência instantânea</p>
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>Fazer PIX</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Transferência instantânea</p>
         </div>
 
         {apiError && <AlertBox type="error" message={apiError} onClose={() => setApiError('')} style={{ marginBottom: '1rem' }} />}
@@ -121,7 +122,7 @@ export default function PixPage() {
         {/* Step: Confirm */}
         {step === 'confirm' && (
           <Card>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: '#1f2328' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
               Confirmar Transferência
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
@@ -131,15 +132,16 @@ export default function PixPage() {
                 { label: 'Valor', value: formatCurrency(amountNum) },
                 { label: 'Descrição', value: description || '—' },
               ].map(({ label, value }) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6' }}>
-                  <span style={{ color: '#6b7280', fontSize: '0.88rem' }}>{label}</span>
-                  <span style={{ fontWeight: 600, color: '#1f2328', fontSize: '0.88rem' }}>{value}</span>
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>{label}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.88rem' }}>{value}</span>
                 </div>
               ))}
             </div>
-            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '0.75rem', marginBottom: '1.5rem' }}>
-              <p style={{ fontSize: '0.82rem', color: '#92400e', margin: 0 }}>
-                ⚠️ Verifique os dados antes de confirmar. PIX não pode ser cancelado após o processamento.
+            <div style={{ background: 'var(--yellow-100)', border: '1px solid var(--yellow-200)', borderRadius: 'var(--radius-sm)', padding: '0.75rem', marginBottom: '1.5rem' }}>
+              <p style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', color: 'var(--yellow-600)', margin: 0 }}>
+                <AlertTriangle size={14} style={{ flexShrink: 0 }} />
+                Verifique os dados antes de confirmar. PIX não pode ser cancelado após o processamento.
               </p>
             </div>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -153,10 +155,10 @@ export default function PixPage() {
         {step === 'processing' && (
           <Card style={{ textAlign: 'center', padding: '3rem' }}>
             <Spinner size={40} />
-            <p style={{ marginTop: '1.25rem', fontWeight: 600, color: '#1f2328' }}>
+            <p style={{ marginTop: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
               Processando sua transferência...
             </p>
-            <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '0.35rem' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.35rem' }}>
               Aguarde enquanto verificamos sua operação.
             </p>
           </Card>
@@ -167,21 +169,21 @@ export default function PixPage() {
           <Card>
             {result.result_screen === 'approved' && (
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>✅</div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#005B2B', marginBottom: '0.5rem' }}>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><CheckCircle2 size={48} style={{ color: 'var(--green-600)' }} /></div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green-600)', marginBottom: '0.5rem' }}>
                   PIX Realizado com Sucesso!
                 </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                   {result.message}
                 </p>
-                <div style={{ background: '#f4faf6', borderRadius: 8, padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
+                <div style={{ background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                    <span style={{ color: '#6b7280', fontSize: '0.85rem' }}>Destinatário</span>
-                    <span style={{ fontWeight: 600 }}>{recipientName}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Destinatário</span>
+                    <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{recipientName}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#6b7280', fontSize: '0.85rem' }}>Valor transferido</span>
-                    <span style={{ fontWeight: 700, color: '#005B2B', fontSize: '1.1rem' }}>{formatCurrency(amountNum)}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Valor transferido</span>
+                    <span style={{ fontWeight: 700, color: 'var(--green-600)', fontSize: '1.1rem' }}>{formatCurrency(amountNum)}</span>
                   </div>
                 </div>
               </div>
@@ -189,15 +191,15 @@ export default function PixPage() {
 
             {result.result_screen === 'retained' && (
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>⏳</div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#d97706', marginBottom: '0.5rem' }}>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><Clock size={48} style={{ color: 'var(--yellow-600)' }} /></div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yellow-600)', marginBottom: '0.5rem' }}>
                   Verificação de Segurança
                 </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                   {result.message}
                 </p>
-                <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, padding: '0.75rem', marginBottom: '1.5rem' }}>
-                  <p style={{ fontSize: '0.85rem', color: '#92400e', margin: 0 }}>
+                <div style={{ background: 'var(--yellow-100)', border: '1px solid var(--yellow-200)', borderRadius: 'var(--radius-sm)', padding: '0.75rem', marginBottom: '1.5rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--yellow-600)', margin: 0 }}>
                     Sua equipe de segurança irá verificar esta operação e entrará em contato caso necessário.
                     O valor <strong>não foi debitado</strong> da sua conta.
                   </p>
@@ -207,15 +209,15 @@ export default function PixPage() {
 
             {result.result_screen === 'blocked' && (
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🛡️</div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#dc2626', marginBottom: '0.5rem' }}>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><ShieldX size={48} style={{ color: 'var(--red-600)' }} /></div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red-600)', marginBottom: '0.5rem' }}>
                   Transferência Não Concluída
                 </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                   {result.message}
                 </p>
-                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '0.75rem', marginBottom: '1.5rem' }}>
-                  <p style={{ fontSize: '0.85rem', color: '#dc2626', margin: 0 }}>
+                <div style={{ background: 'var(--red-100)', border: '1px solid var(--red-200)', borderRadius: 'var(--radius-sm)', padding: '0.75rem', marginBottom: '1.5rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--red-600)', margin: 0 }}>
                     Sua transferência foi bloqueada por motivos de segurança.
                     O valor <strong>não foi debitado</strong>. Aguarde o contato da equipe de segurança.
                   </p>
@@ -225,11 +227,11 @@ export default function PixPage() {
 
             {result.result_screen === 'insufficient_funds' && (
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>❌</div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#dc2626', marginBottom: '0.5rem' }}>
+                <div style={{ marginBottom: '0.75rem', display: 'flex', justifyContent: 'center' }}><XCircle size={48} style={{ color: 'var(--red-600)' }} /></div>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red-600)', marginBottom: '0.5rem' }}>
                   Saldo Insuficiente
                 </h2>
-                <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>{result.message}</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{result.message}</p>
               </div>
             )}
 

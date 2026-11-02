@@ -39,8 +39,8 @@ export default function WalletPage() {
   return (
     <AnalystLayout>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1f2328' }}>Minha Carteira</h1>
-        <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+        <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>Minha Carteira</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           {associates.length} associado(s) vinculados à sua carteira
         </p>
       </div>
@@ -64,26 +64,26 @@ export default function WalletPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <div style={{
                     width: 44, height: 44, borderRadius: '50%',
-                    background: '#005B2B',
+                    background: 'var(--green-600)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: '#fff', fontWeight: 700, fontSize: '1.1rem', flexShrink: 0,
                   }}>
                     {a.full_name.charAt(0)}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 700, color: '#1f2328', fontSize: '0.95rem' }}>{a.full_name}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#6b7280' }}>
+                    <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{a.full_name}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
                       @{a.username} · Conta {a.account_number}
                     </div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Saldo</div>
-                    <div style={{ fontWeight: 700, color: '#005B2B' }}>{formatCurrency(a.balance)}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Saldo</div>
+                    <div style={{ fontWeight: 700, color: 'var(--green-600)' }}>{formatCurrency(a.balance)}</div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Alertas</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Alertas</div>
                     <div>
                       <Badge variant={a.pending_alerts > 0 ? 'red' : 'green'}>
                         {a.pending_alerts}
@@ -91,13 +91,13 @@ export default function WalletPage() {
                     </div>
                   </div>
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Transações</div>
-                    <div style={{ fontWeight: 600 }}>{a.total_transactions}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Transações</div>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{a.total_transactions}</div>
                   </div>
                   <button
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer',
-                      fontSize: '1.2rem', color: '#6b7280',
+                      fontSize: '1.2rem', color: 'var(--text-muted)',
                     }}
                   >
                     {expanded === a.id ? '▲' : '▼'}
@@ -107,14 +107,14 @@ export default function WalletPage() {
 
               {/* Expanded transactions */}
               {expanded === a.id && (
-                <div style={{ marginTop: '1.25rem', borderTop: '1px solid #f3f4f6', paddingTop: '1.25rem' }}>
+                <div style={{ marginTop: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1f2328' }}>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Transações Recentes
                     </h3>
                     <button
                       onClick={() => navigate(`/analyst/alerts?associate=${a.id}`)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#005B2B', fontSize: '0.82rem', fontWeight: 600 }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--green-600)', fontSize: '0.82rem', fontWeight: 600 }}
                     >
                       Ver alertas →
                     </button>
@@ -125,15 +125,16 @@ export default function WalletPage() {
                       <Spinner size={24} />
                     </div>
                   ) : !txs[a.id]?.length ? (
-                    <p style={{ color: '#6b7280', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
                       Nenhuma transação encontrada.
                     </p>
                   ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <div className="table-responsive">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', minWidth: 400 }}>
                       <thead>
-                        <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                        <tr style={{ borderBottom: '1px solid var(--border)' }}>
                           {['Data', 'Destinatário', 'Valor', 'Score', 'Status'].map((h) => (
-                            <th key={h} style={{ padding: '0.4rem 0.5rem', textAlign: 'left', color: '#9ca3af', fontSize: '0.72rem', fontWeight: 600 }}>
+                            <th key={h} style={{ padding: '0.4rem 0.5rem', textAlign: 'left', color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 600 }}>
                               {h}
                             </th>
                           ))}
@@ -146,14 +147,16 @@ export default function WalletPage() {
                         }>).slice(0, 8).map((t) => (
                           <tr
                             key={t.id}
-                            style={{ borderBottom: '1px solid #f9fafb', cursor: 'pointer' }}
+                            style={{ borderBottom: '1px solid var(--surface-2)', cursor: 'pointer' }}
                             onClick={() => navigate(`/analyst/transactions/${t.id}`)}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--surface-2)' }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}
                           >
-                            <td style={{ padding: '0.5rem', color: '#6b7280' }}>
+                            <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>
                               {t.timestamp ? new Date(t.timestamp).toLocaleDateString('pt-BR') : '—'}
                             </td>
-                            <td style={{ padding: '0.5rem', fontWeight: 500 }}>{t.merchant}</td>
-                            <td style={{ padding: '0.5rem', fontWeight: 600 }}>
+                            <td style={{ padding: '0.5rem', fontWeight: 500, color: 'var(--text-primary)' }}>{t.merchant}</td>
+                            <td style={{ padding: '0.5rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)}
                             </td>
                             <td style={{ padding: '0.5rem' }}>
@@ -172,6 +175,7 @@ export default function WalletPage() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   )}
                 </div>
               )}

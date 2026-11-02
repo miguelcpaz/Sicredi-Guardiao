@@ -6,31 +6,32 @@
 :root,
 [data-theme="light"] {
   /* Brand greens */
-  --green-900: #003D1C;
-  --green-800: #004D23;
-  --green-700: #005B2B;
-  --green-600: #007A3A;
-  --green-500: #00A650;
-  --green-400: #34C97A;
-  --green-300: #6DDBA0;
-  --green-200: #B3EFCB;
-  --green-100: #E8F5EE;
-  --green-50:  #F4FAF6;
+  --green-900: #1a4a2a;
+  --green-800: #1f6033;
+  --green-700: #3fa535;
+  --green-600: #3fa535;
+  --green-500: #3fa535;
+  --green-400: #5ec254;
+  --green-300: #7dd174;
+  --green-200: #c5ebc2;
+  --green-100: #e8f5e9;
+  --green-50:  #f2faf2;
 
-  /* Surface & text */
-  --bg:         #f4faf6;
+  /* Backgrounds & surfaces */
+  --bg:         #f8faf9;
   --surface:    #ffffff;
-  --surface-2:  #f7f8fa;
-  --surface-3:  #f0f2f5;
-  --border:     #e5e7eb;
-  --border-2:   #d1d5db;
+  --surface-2:  #f2f6f3;
+  --surface-3:  #edf5ee;
+  --border:     #e2e9e3;
+  --border-2:   #d2ddd4;
 
-  --text-primary:   #1f2328;
-  --text-secondary: #57606a;
-  --text-muted:     #8b949e;
+  /* Text */
+  --text-primary:   #202b24;
+  --text-secondary: #647168;
+  --text-muted:     #8b978e;
   --text-on-green:  #ffffff;
 
-  /* Semantic */
+  /* Semantic — preserved for risk indicators */
   --red-600:    #dc2626;
   --red-100:    #fef2f2;
   --red-200:    #fecaca;
@@ -41,23 +42,31 @@
   --blue-100:   #eff6ff;
   --blue-200:   #bfdbfe;
 
-  /* Sidebar */
-  --sidebar-bg:         #005B2B;
-  --sidebar-text:       rgba(255,255,255,0.9);
-  --sidebar-muted:      rgba(255,255,255,0.5);
-  --sidebar-active-bg:  rgba(255,255,255,0.15);
-  --sidebar-hover-bg:   rgba(255,255,255,0.08);
-  --sidebar-border:     rgba(255,255,255,0.1);
+  /* Sidebar — Analyst (dark sidebar) */
+  --sidebar-analyst-bg:         #1a1f2e;
+  --sidebar-analyst-text:       rgba(255,255,255,0.88);
+  --sidebar-analyst-muted:      rgba(255,255,255,0.42);
+  --sidebar-analyst-active-bg:  rgba(63,165,53,0.18);
+  --sidebar-analyst-hover-bg:   rgba(255,255,255,0.07);
+  --sidebar-analyst-border:     rgba(255,255,255,0.08);
+  --sidebar-analyst-indicator:  #3fa535;
 
-  --sidebar-analyst-bg:       #1a1f2e;
-  --sidebar-analyst-active:   rgba(0, 166, 80, 0.2);
-  --sidebar-analyst-indicator:#00A650;
+  /* Sidebar — Associate (green sidebar) */
+  --sidebar-bg:         #3fa535;
+  --sidebar-text:       rgba(255,255,255,0.92);
+  --sidebar-muted:      rgba(255,255,255,0.55);
+  --sidebar-active-bg:  rgba(255,255,255,0.18);
+  --sidebar-hover-bg:   rgba(255,255,255,0.09);
+  --sidebar-border:     rgba(255,255,255,0.12);
+
+  /* Input */
+  --input-bg: #ffffff;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
-  --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.09);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.13);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -68,8 +77,8 @@
   --transition: 150ms ease;
 
   /* Chart colors */
-  --chart-1: #005B2B;
-  --chart-2: #00A650;
+  --chart-1: #3fa535;
+  --chart-2: #32892b;
   --chart-3: #dc2626;
   --chart-4: #d97706;
   --chart-5: #2563eb;
@@ -79,57 +88,72 @@
    Dark Mode
    ========================================================= */
 [data-theme="dark"] {
-  --green-900: #003D1C;
-  --green-800: #004D23;
-  --green-700: #006B32;
-  --green-600: #008A42;
-  --green-500: #00C45E;
-  --green-400: #34D47A;
-  --green-300: #6DE8A0;
-  --green-200: #A3F0C5;
-  --green-100: #D1F7E4;
-  --green-50:  #E8FBF1;
+  /* Brand greens — slightly lighter for dark bg */
+  --green-900: #1a3a20;
+  --green-800: #1e4825;
+  --green-700: #65c45a;
+  --green-600: #65c45a;
+  --green-500: #65c45a;
+  --green-400: #7bd570;
+  --green-300: #9de395;
+  --green-200: #253e2a;
+  --green-100: #1e3323;
+  --green-50:  #192a1e;
 
-  --bg:        #0d1117;
-  --surface:   #161b22;
-  --surface-2: #1c2128;
-  --surface-3: #22272e;
-  --border:    #30363d;
-  --border-2:  #444c56;
+  /* Backgrounds & surfaces */
+  --bg:        #121715;
+  --surface:   #1c241f;
+  --surface-2: #263029;
+  --surface-3: #2b382f;
+  --border:    #303d34;
+  --border-2:  #405046;
 
-  --text-primary:   #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted:     #6e7681;
+  /* Text */
+  --text-primary:   #edf2ee;
+  --text-secondary: #a8b6ac;
+  --text-muted:     #829087;
   --text-on-green:  #ffffff;
 
+  /* Semantic — adapted for dark bg readability */
   --red-600:    #f87171;
-  --red-100:    #2d1515;
-  --red-200:    #5c2222;
+  --red-100:    #2a1010;
+  --red-200:    #4a1a1a;
   --yellow-600: #fbbf24;
-  --yellow-100: #2d2210;
-  --yellow-200: #5c4420;
+  --yellow-100: #281d08;
+  --yellow-200: #40300a;
   --blue-600:   #60a5fa;
   --blue-100:   #0d1f3c;
   --blue-200:   #1a3a6e;
 
-  --sidebar-bg:        #0d1117;
-  --sidebar-text:      rgba(230,237,243,0.9);
-  --sidebar-muted:     rgba(230,237,243,0.4);
-  --sidebar-active-bg: rgba(0,164,80,0.18);
-  --sidebar-hover-bg:  rgba(255,255,255,0.05);
-  --sidebar-border:    rgba(255,255,255,0.08);
+  /* Sidebar — Analyst (slightly lighter than bg) */
+  --sidebar-analyst-bg:         #171d19;
+  --sidebar-analyst-text:       rgba(237,242,238,0.88);
+  --sidebar-analyst-muted:      rgba(237,242,238,0.38);
+  --sidebar-analyst-active-bg:  rgba(101,196,90,0.15);
+  --sidebar-analyst-hover-bg:   rgba(255,255,255,0.05);
+  --sidebar-analyst-border:     rgba(255,255,255,0.07);
+  --sidebar-analyst-indicator:  #65c45a;
 
-  --sidebar-analyst-bg:       #0d1117;
-  --sidebar-analyst-active:   rgba(0, 196, 94, 0.18);
-  --sidebar-analyst-indicator:#00C45E;
+  /* Sidebar — Associate (same dark panel) */
+  --sidebar-bg:         #171d19;
+  --sidebar-text:       rgba(237,242,238,0.88);
+  --sidebar-muted:      rgba(237,242,238,0.38);
+  --sidebar-active-bg:  rgba(101,196,90,0.15);
+  --sidebar-hover-bg:   rgba(255,255,255,0.05);
+  --sidebar-border:     rgba(255,255,255,0.07);
 
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
-  --shadow-xl: 0 20px 60px rgba(0,0,0,0.6);
+  /* Input */
+  --input-bg: #202923;
 
-  --chart-1: #00C45E;
-  --chart-2: #34D47A;
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.28), 0 1px 2px rgba(0,0,0,0.18);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.38);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.48);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.60);
+
+  /* Chart colors */
+  --chart-1: #65c45a;
+  --chart-2: #7bd570;
   --chart-3: #f87171;
   --chart-4: #fbbf24;
   --chart-5: #60a5fa;
@@ -155,7 +179,6 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background var(--transition), color var(--transition);
 }
 
 /* Smooth theme transitions — respect prefers-reduced-motion */
@@ -163,7 +186,7 @@ body {
   *,
   *::before,
   *::after {
-    transition-property: background-color, border-color, color, fill, stroke;
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
     transition-duration: 150ms;
     transition-timing-function: ease;
   }
@@ -193,6 +216,8 @@ button {
 input, textarea, select {
   font-family: var(--font);
   font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 /* =========================================================
@@ -206,6 +231,14 @@ input, textarea, select {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* =========================================================
+   Focus visible
+   ========================================================= */
+:focus-visible {
+  outline: 2px solid var(--green-600);
+  outline-offset: 2px;
 }
 
 /* =========================================================
@@ -267,3 +300,400 @@ input, textarea, select {
   animation: shimmer 1.4s ease infinite;
   border-radius: var(--radius-sm);
 }
+
+/* =========================================================
+   RESPONSIVIDADE GLOBAL — Sicredi Guardião
+   Breakpoints:
+     mobile:  <= 767px
+     tablet:  768px – 1023px
+     desktop: >= 1024px
+   ========================================================= */
+
+/* Prevent horizontal overflow at the root level */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* ─── Layout shell ─────────────────────────────────────── */
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  animation: fadeIn 0.2s ease both;
+}
+.sidebar-overlay.active { display: block; }
+
+/* Mobile hamburger button */
+.sidebar-toggle-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 101;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+/* Slide-in animation for mobile sidebar */
+@keyframes slideInSidebar {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes slideOutSidebar {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ─── Main content area ────────────────────────────────── */
+.main-content-wrapper {
+  min-width: 0;
+  flex: 1;
+  overflow-x: hidden;
+}
+
+/* ─── Generic responsive table wrapper ────────────────── */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  min-width: 0;
+}
+.table-responsive table {
+  min-width: 480px;
+}
+
+/* ─── Cards grid ───────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* ─── Charts row ───────────────────────────────────────── */
+.charts-row {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 2fr 1fr;
+}
+
+/* ─── Alert detail two-column ──────────────────────────── */
+.alert-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ─── AI Chat page grid ────────────────────────────────── */
+.ai-chat-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.25rem;
+}
+
+/* ─── Sidebar mobile show/hide helpers ─────────────────── */
+/* desktop-only: visible on desktop, hidden on mobile */
+.desktop-only { display: flex; }
+.mobile-only  { display: none !important; }
+
+@media (max-width: 767px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: flex !important; }
+
+  /* Sidebar off-screen when not opened */
+  aside:not(.sidebar-mobile-open) {
+    transform: translateX(-100%) !important;
+    width: 240px !important;
+  }
+
+  aside.sidebar-mobile-open {
+    transform: translateX(0) !important;
+    width: 240px !important;
+  }
+
+  /* Main: no margin-left on mobile, hamburger takes care of access */
+  .main-content-wrapper {
+    margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* On tablet, sidebar stays visible but in collapsed state */
+  .sidebar-toggle-btn { display: none !important; }
+}
+
+/* ─── Page padding ─────────────────────────────────────── */
+.page-pad {
+  padding: 2rem;
+}
+
+/* ─── Modal responsive ─────────────────────────────────── */
+.modal-inner {
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* ─── Chat panel (AlertDetail quick chat) ──────────────── */
+.quick-chat-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+}
+
+/* =========================================================
+   TABLET  768px – 1023px
+   ========================================================= */
+@media (max-width: 1023px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-chat-grid {
+    grid-template-columns: 220px 1fr;
+    gap: 0.85rem;
+  }
+
+  .page-pad {
+    padding: 1.5rem;
+  }
+}
+
+/* =========================================================
+   MOBILE  <= 767px
+   ========================================================= */
+@media (max-width: 767px) {
+  /* Show the hamburger toggle */
+  .sidebar-toggle-btn {
+    display: flex;
+  }
+
+  /* Shrink font slightly */
+  html {
+    font-size: 14px;
+  }
+
+  .page-pad {
+    padding: 1rem;
+    padding-top: 3.5rem; /* clearance for the hamburger button */
+  }
+
+  /* Cards: 2 columns on mobile, 1 on tiny screens */
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-chat-grid {
+    grid-template-columns: 1fr;
+    height: auto !important;
+  }
+
+  /* The sidebar column in ai-chat hides by default on mobile */
+  .ai-chat-sidebar {
+    display: none;
+  }
+  .ai-chat-sidebar.open {
+    display: flex;
+  }
+
+  /* Quick chat takes full width */
+  .quick-chat-panel {
+    width: 100%;
+    left: 0;
+  }
+
+  /* Modal full-width on mobile */
+  .modal-inner {
+    max-height: 95vh;
+  }
+}
+
+/* =========================================================
+   TINY MOBILE  <= 374px
+   ========================================================= */
+@media (max-width: 374px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-pad {
+    padding: 0.75rem;
+    padding-top: 3.5rem;
+  }
+}
+
+
+/* =========================================================
+   Guardião AI — Markdown Renderer Styles
+   Scoped to .guardiao-md — no global side effects
+   ========================================================= */
+
+/* Base */
+.guardiao-md {
+  color: inherit;
+  line-height: 1.65;
+  word-break: break-word;
+}
+
+/* Paragraphs */
+.guardiao-md p {
+  margin: 0 0 0.6em;
+}
+.guardiao-md p:last-child {
+  margin-bottom: 0;
+}
+
+/* Headings — sized down to fit comfortably inside chat bubbles */
+.guardiao-md h1 { font-size: 1.15em; font-weight: 700; margin: 0.75em 0 0.4em; color: var(--text-primary); }
+.guardiao-md h2 { font-size: 1.05em; font-weight: 700; margin: 0.65em 0 0.35em; color: var(--text-primary); }
+.guardiao-md h3 { font-size: 0.97em; font-weight: 700; margin: 0.55em 0 0.3em; color: var(--text-primary); }
+.guardiao-md h4,
+.guardiao-md h5,
+.guardiao-md h6 { font-size: 0.93em; font-weight: 600; margin: 0.5em 0 0.25em; color: var(--text-primary); }
+
+/* Bold / Italic */
+.guardiao-md strong { font-weight: 700; }
+.guardiao-md em { font-style: italic; }
+
+/* Horizontal rule */
+.guardiao-md hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.75em 0;
+}
+
+/* Links */
+.guardiao-md a {
+  color: var(--green-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.guardiao-md a:hover { opacity: 0.8; }
+
+/* Lists */
+.guardiao-md ul,
+.guardiao-md ol {
+  padding-left: 1.4em;
+  margin: 0.35em 0 0.6em;
+}
+.guardiao-md ul { list-style: disc; }
+.guardiao-md ol { list-style: decimal; }
+.guardiao-md li { margin: 0.2em 0; }
+.guardiao-md li > ul,
+.guardiao-md li > ol { margin: 0.15em 0; }
+
+/* Blockquote */
+.guardiao-md blockquote {
+  margin: 0.5em 0;
+  padding: 0.4em 0.75em;
+  border-left: 3px solid var(--border-2);
+  color: var(--text-secondary);
+  background: var(--surface-2);
+  border-radius: 0 4px 4px 0;
+}
+.guardiao-md blockquote p { margin: 0; }
+
+/* Inline code */
+.guardiao-md code {
+  font-family: "Cascadia Code", "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  font-size: 0.85em;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Code blocks */
+.guardiao-md pre {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75em 1em;
+  overflow-x: auto;
+  margin: 0.5em 0;
+  position: relative;
+}
+.guardiao-md pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.82em;
+  white-space: pre;
+  word-break: normal;
+  line-height: 1.5;
+}
+
+/* Tables */
+.guardiao-md table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875em;
+  margin: 0.5em 0;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.guardiao-md thead { background: var(--surface-3); }
+.guardiao-md th {
+  padding: 0.45em 0.7em;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.guardiao-md td {
+  padding: 0.4em 0.7em;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+.guardiao-md tr:last-child td { border-bottom: none; }
+.guardiao-md tr:hover td { background: var(--surface-2); }
+
+/* Small variant for the FloatingChat widget */
+.guardiao-md--sm {
+  font-size: 0.92em;
+}
+.guardiao-md--sm h1 { font-size: 1.05em; }
+.guardiao-md--sm h2 { font-size: 0.97em; }
+.guardiao-md--sm h3 { font-size: 0.92em; }
+.guardiao-md--sm pre { padding: 0.5em 0.75em; }
+.guardiao-md--sm table { font-size: 0.82em; }

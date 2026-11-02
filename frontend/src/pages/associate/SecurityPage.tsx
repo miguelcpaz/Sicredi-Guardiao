@@ -3,6 +3,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ShieldCheck, AlertTriangle, CheckCircle, XCircle } from 'lucide-react'
 import AssociateLayout from '../../components/layout/AssociateLayout'
 import { Card, Spinner, EmptyState, Modal, Button, AlertBox, formatDate } from '../../components/ui/index'
 import { listNotifications, respondToNotification } from '../../api/client'
@@ -52,8 +53,11 @@ export default function SecurityPage() {
   return (
     <AssociateLayout>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1f2328' }}>🛡️ Central de Segurança</h1>
-        <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+          <ShieldCheck size={22} style={{ color: 'var(--green-600)' }} />
+          Central de Segurança
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Operações que precisam da sua atenção
         </p>
       </div>
@@ -86,21 +90,23 @@ export default function SecurityPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {pendingNotifications.map((n) => (
             <div key={n.id} style={{
-              background: '#fff',
-              border: '1px solid #fde68a',
-              borderLeft: '4px solid #d97706',
-              borderRadius: 10,
+              background: 'var(--surface)',
+              border: '1px solid var(--yellow-200)',
+              borderLeft: '4px solid var(--yellow-600)',
+              borderRadius: 'var(--radius-md)',
               padding: '1.25rem',
+              boxShadow: 'var(--shadow-sm)',
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1f2328', marginBottom: '0.4rem' }}>
-                    ⚠️ {n.title}
+                  <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
+                    <AlertTriangle size={16} style={{ color: 'var(--yellow-600)', flexShrink: 0 }} />
+                    {n.title}
                   </h3>
-                  <p style={{ fontSize: '0.875rem', color: '#4b5563', marginBottom: '0.5rem', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', lineHeight: 1.5 }}>
                     {n.message}
                   </p>
-                  <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{formatDate(n.created_at)}</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{formatDate(n.created_at)}</p>
                 </div>
                 <Button onClick={() => setSelected(n)}>
                   Verificar
@@ -114,20 +120,20 @@ export default function SecurityPage() {
       {/* All notifications list (read) */}
       {notifications.filter((n) => n.is_read && n.alert_id).length > 0 && (
         <div style={{ marginTop: '2rem' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#1f2328', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
             Ocorrências Anteriores
           </h2>
           <Card>
             {notifications.filter((n) => n.is_read && n.alert_id).map((n) => (
               <div key={n.id} style={{
                 padding: '0.75rem 0',
-                borderBottom: '1px solid #f3f4f6',
+                borderBottom: '1px solid var(--border)',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.875rem', color: '#4b5563' }}>{n.title}</span>
-                  <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{formatDate(n.created_at)}</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{n.title}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{formatDate(n.created_at)}</span>
                 </div>
-                <p style={{ fontSize: '0.82rem', color: '#6b7280', marginTop: '0.2rem' }}>{n.message}</p>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>{n.message}</p>
               </div>
             ))}
           </Card>
@@ -138,18 +144,18 @@ export default function SecurityPage() {
       {selected && (
         <Modal title="Verificação de Segurança" onClose={() => setSelected(null)}>
           <div style={{
-            background: '#fffbeb',
-            border: '1px solid #fde68a',
-            borderRadius: 8,
+            background: 'var(--yellow-100)',
+            border: '1px solid var(--yellow-200)',
+            borderRadius: 'var(--radius-sm)',
             padding: '1rem',
             marginBottom: '1.5rem',
           }}>
-            <p style={{ fontSize: '0.9rem', color: '#92400e', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--yellow-600)', lineHeight: 1.6 }}>
               {selected.message}
             </p>
           </div>
 
-          <p style={{ fontWeight: 600, color: '#1f2328', marginBottom: '1.25rem', fontSize: '0.95rem' }}>
+          <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1.25rem', fontSize: '0.95rem' }}>
             Você reconhece esta operação?
           </p>
 
@@ -159,7 +165,8 @@ export default function SecurityPage() {
               disabled={responding}
               fullWidth
             >
-              ✅ Sim, reconheço esta transação
+              <CheckCircle size={15} style={{ marginRight: '0.4rem' }} />
+              Sim, reconheço esta transação
             </Button>
             <Button
               variant="danger"
@@ -167,7 +174,8 @@ export default function SecurityPage() {
               disabled={responding}
               fullWidth
             >
-              ❌ Não reconheço esta transação
+              <XCircle size={15} style={{ marginRight: '0.4rem' }} />
+              Não reconheço esta transação
             </Button>
             <Button variant="secondary" onClick={() => setSelected(null)} fullWidth>
               Responder depois
@@ -180,7 +188,7 @@ export default function SecurityPage() {
             </div>
           )}
 
-          <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '1rem', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '1rem', textAlign: 'center' }}>
             Sua resposta será registrada e enviada à equipe de segurança.
           </p>
         </Modal>

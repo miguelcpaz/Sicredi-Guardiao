@@ -2,6 +2,7 @@
  * Associate Notifications Page — with SSE real-time updates + polling fallback
  */
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { CheckCircle, XCircle } from 'lucide-react'
 import AssociateLayout from '../../components/layout/AssociateLayout'
 import { Card, Spinner, EmptyState, Button, Modal, AlertBox, formatDate } from '../../components/ui/index'
 import {
@@ -85,15 +86,15 @@ export default function NotificationsPage() {
     <AssociateLayout>
       <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1f2328' }}>
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>
             Notificações {unreadCount > 0 && (
-              <span style={{ fontSize: '0.9rem', background: '#dc2626', color: '#fff', borderRadius: 20, padding: '0.1rem 0.6rem', marginLeft: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', background: 'var(--red-600)', color: '#fff', borderRadius: 20, padding: '0.1rem 0.6rem', marginLeft: '0.5rem' }}>
                 {unreadCount}
               </span>
             )}
           </h1>
-          <p style={{ color: '#6b7280', fontSize: '0.85rem', marginTop: '0.1rem' }}>
-            {sseStatus === 'connected' ? '🟢 Tempo real ativo' : '🔄 Atualizando a cada 5s'}
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.1rem' }}>
+            {sseStatus === 'connected' ? 'Tempo real ativo' : 'Atualizando a cada 5s'}
           </p>
         </div>
         {unreadCount > 0 && (
@@ -131,32 +132,33 @@ export default function NotificationsPage() {
               key={n.id}
               onClick={() => handleMarkRead(n)}
               style={{
-                background: '#fff',
-                border: `1px solid ${n.is_read ? '#e5e7eb' : '#bbf7d0'}`,
-                borderLeft: `4px solid ${n.is_read ? '#e5e7eb' : '#005B2B'}`,
-                borderRadius: 10,
+                background: 'var(--surface)',
+                border: `1px solid ${n.is_read ? 'var(--border)' : 'var(--green-200)'}`,
+                borderLeft: `4px solid ${n.is_read ? 'var(--border-2)' : 'var(--green-600)'}`,
+                borderRadius: 'var(--radius-md)',
                 padding: '1rem 1.25rem',
                 cursor: 'pointer',
                 transition: 'border-color 0.15s',
+                boxShadow: 'var(--shadow-sm)',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
                     {!n.is_read && (
-                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#005B2B', display: 'inline-block' }} />
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--green-600)', display: 'inline-block' }} />
                     )}
-                    <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#1f2328' }}>{n.title}</h3>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>{n.title}</h3>
                   </div>
-                  <p style={{ fontSize: '0.85rem', color: '#4b5563', marginBottom: '0.5rem' }}>{n.message}</p>
-                  <p style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{formatDate(n.created_at)}</p>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{n.message}</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{formatDate(n.created_at)}</p>
                 </div>
                 {n.alert_id && !n.is_read && (
                   <button
                     onClick={(e) => { e.stopPropagation(); setResponseModal(n) }}
                     style={{
-                      background: '#005B2B', color: '#fff',
-                      border: 'none', borderRadius: 6,
+                      background: 'var(--green-600)', color: '#fff',
+                      border: 'none', borderRadius: 'var(--radius-sm)',
                       padding: '0.4rem 0.75rem',
                       fontSize: '0.78rem', fontWeight: 600,
                       cursor: 'pointer', flexShrink: 0,
@@ -174,10 +176,10 @@ export default function NotificationsPage() {
       {/* Response modal */}
       {responseModal && (
         <Modal title="Confirmar Identidade" onClose={() => setResponseModal(null)}>
-          <p style={{ color: '#4b5563', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
             {responseModal.message}
           </p>
-          <p style={{ fontWeight: 600, color: '#1f2328', marginBottom: '1rem', fontSize: '0.9rem' }}>
+          <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '0.9rem' }}>
             Você reconhece esta operação?
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -186,7 +188,8 @@ export default function NotificationsPage() {
               disabled={responding === responseModal.id}
               fullWidth
             >
-              ✅ Sim, reconheço esta transação
+              <CheckCircle size={15} style={{ marginRight: '0.4rem' }} />
+              Sim, reconheço esta transação
             </Button>
             <Button
               variant="danger"
@@ -194,7 +197,8 @@ export default function NotificationsPage() {
               disabled={responding === responseModal.id}
               fullWidth
             >
-              ❌ Não reconheço esta transação
+              <XCircle size={15} style={{ marginRight: '0.4rem' }} />
+              Não reconheço esta transação
             </Button>
             <Button variant="secondary" onClick={() => setResponseModal(null)} fullWidth>
               Fechar

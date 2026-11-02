@@ -6,6 +6,9 @@
  */
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Bot, ShieldCheck, Maximize2, X, Square, Send } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { streamAssociateMessage, streamAnalystMessage, createAssociateChatSession, createChatSession } from '../../api/client'
 
 interface FMessage {
@@ -141,15 +144,15 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
         style={{
           position: 'fixed', right: 20, bottom: 20, zIndex: 500,
           width: 52, height: 52, borderRadius: '50%',
-          background: '#005B2B', color: '#fff', border: 'none', cursor: 'pointer',
+          background: 'var(--green-600)', color: '#fff', border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.4rem', boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
+          boxShadow: 'var(--shadow-md)',
           transition: 'transform 0.2s, box-shadow 0.2s',
         }}
         onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)' }}
         onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.25)' }}
       >
-        🤖
+        {userRole === 'associate' ? <ShieldCheck size={22} /> : <Bot size={22} />}
       </button>
     )
   }
@@ -164,28 +167,31 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
     }}>
       {/* Header */}
       <div style={{
-        padding: '0.75rem 1rem', background: '#1a1f2e',
+        padding: '0.75rem 1rem', background: 'var(--sidebar-analyst-bg)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0,
       }}>
         <div>
-          <span style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem' }}>🤖 Guardião IA</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--sidebar-analyst-text)', fontWeight: 700, fontSize: '0.9rem' }}>
+            {userRole === 'associate' ? <ShieldCheck size={14} /> : <Bot size={14} />}
+            Guardião IA
+          </span>
           {transactionId && (
-            <span style={{ marginLeft: '0.5rem', fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)' }}>Tx #{transactionId}</span>
+            <span style={{ marginLeft: '0.5rem', fontSize: '0.68rem', color: 'var(--sidebar-analyst-muted)' }}>Tx #{transactionId}</span>
           )}
         </div>
         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
           <button
             onClick={() => navigate(userRole === 'associate' ? '/associate/ai-chat' : '/analyst/ai-chat')}
             title="Expandir para página completa"
-            style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', borderRadius: 6, padding: '0.2rem 0.4rem', fontSize: '0.72rem' }}
+            style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', color: 'var(--sidebar-analyst-muted)', borderRadius: 6, padding: '0.3rem', display: 'flex', alignItems: 'center' }}
           >
-            ⤢
+            <Maximize2 size={13} />
           </button>
           <button
             onClick={() => setIsOpen(false)}
-            style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontSize: '1.1rem', lineHeight: 1 }}
+            style={{ background: 'none', border: 'none', color: 'var(--sidebar-analyst-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
           >
-            ×
+            <X size={16} />
           </button>
         </div>
       </div>
@@ -195,7 +201,7 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
         {messages.length === 0 && !streaming && (
           <div style={{ padding: '1rem 0.5rem' }}>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem', textAlign: 'center' }}>
-              {userRole === 'associate' ? '🛡️ Assistente de Segurança' : '🔍 Copiloto Antifraude'}
+              {userRole === 'associate' ? 'Assistente de Segurança' : 'Copiloto Antifraude'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
               {suggestions.map((q) => (
@@ -214,12 +220,16 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
             <div style={{
               maxWidth: '88%', padding: '0.5rem 0.75rem',
               borderRadius: m.role === 'user' ? '10px 10px 2px 10px' : '10px 10px 10px 2px',
-              background: m.role === 'user' ? '#005B2B' : 'var(--surface-2)',
+              background: m.role === 'user' ? 'var(--green-600)' : 'var(--surface-2)',
               color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
-              fontSize: '0.82rem', lineHeight: 1.5, whiteSpace: 'pre-wrap',
+              fontSize: '0.82rem', lineHeight: 1.5,
               border: m.role === 'assistant' ? '1px solid var(--border)' : 'none',
             }}>
-              {m.content}
+              {m.role === 'assistant' ? (
+                <div className="guardiao-md guardiao-md--sm">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                </div>
+              ) : m.content}
             </div>
           </div>
         ))}
@@ -230,9 +240,13 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
               maxWidth: '88%', padding: '0.5rem 0.75rem',
               borderRadius: '10px 10px 10px 2px',
               background: 'var(--surface-2)', border: '1px solid var(--border)',
-              fontSize: '0.82rem', lineHeight: 1.5, color: 'var(--text-primary)', whiteSpace: 'pre-wrap',
+              fontSize: '0.82rem', lineHeight: 1.5, color: 'var(--text-primary)',
             }}>
-              {streamingText || (
+              {streamingText ? (
+                <div className="guardiao-md guardiao-md--sm">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{streamingText}</ReactMarkdown>
+                </div>
+              ) : (
                 <span style={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
                   {[0, 0.15, 0.3].map((d) => (
                     <span key={d} style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--text-muted)', animation: 'pulse 1s ease infinite', animationDelay: `${d}s`, display: 'inline-block' }} />
@@ -252,30 +266,30 @@ export default function FloatingChat({ userRole, transactionId, suggestedQuestio
 
       {/* Input */}
       <div style={{ padding: '0.6rem 0.75rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
-        <input
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Pergunte ao Guardião IA..."
-          disabled={streaming || initializing}
-          style={{
-            flex: 1, padding: '0.5rem 0.75rem',
-            border: '1.5px solid var(--border)', borderRadius: 20,
-            fontSize: '0.82rem', outline: 'none',
-            background: 'var(--surface)', color: 'var(--text-primary)',
-          }}
-        />
-        {streaming ? (
-          <button onClick={() => { cancelRef.current?.(); setStreaming(false); setStreamingText('') }} style={{ width: 34, height: 34, borderRadius: '50%', background: '#dc2626', border: 'none', cursor: 'pointer', color: '#fff', fontSize: '0.7rem', flexShrink: 0 }}>⏹</button>
-        ) : (
-          <button onClick={() => sendMessage(input)} disabled={!input.trim()} style={{
-            width: 34, height: 34, borderRadius: '50%',
-            background: input.trim() ? '#005B2B' : 'var(--surface-3)',
-            border: 'none', cursor: input.trim() ? 'pointer' : 'not-allowed',
-            color: '#fff', fontSize: '0.85rem', flexShrink: 0,
-          }}>↑</button>
-        )}
+      <input
+        ref={inputRef}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Pergunte ao Guardião IA..."
+        disabled={streaming || initializing}
+        style={{
+          flex: 1, padding: '0.5rem 0.75rem',
+          border: '1.5px solid var(--border)', borderRadius: 20,
+          fontSize: '0.82rem', outline: 'none',
+          background: 'var(--surface)', color: 'var(--text-primary)',
+        }}
+      />
+      {streaming ? (
+        <button onClick={() => { cancelRef.current?.(); setStreaming(false); setStreamingText('') }} style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--red-600)', border: 'none', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Square size={13} /></button>
+      ) : (
+        <button onClick={() => sendMessage(input)} disabled={!input.trim()} style={{
+          width: 34, height: 34, borderRadius: '50%',
+          background: input.trim() ? 'var(--green-600)' : 'var(--surface-3)',
+          border: 'none', cursor: input.trim() ? 'pointer' : 'not-allowed',
+          color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}><Send size={15} /></button>
+      )}
       </div>
     </div>
   )

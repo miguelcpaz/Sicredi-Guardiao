@@ -2,6 +2,7 @@
  * Simulator Page — technical demo tool for analysts
  */
 import { useState } from 'react'
+import { Settings2, AlertTriangle, List, RefreshCw, Play } from 'lucide-react'
 import AnalystLayout from '../../components/layout/AnalystLayout'
 import { Card, Button, AlertBox, Spinner } from '../../components/ui/index'
 import { listScenarios, prepareScenario, resetSimulator } from '../../api/client'
@@ -70,9 +71,9 @@ export default function SimulatorPage() {
   }
 
   const RISK_COLORS: Record<string, string> = {
-    low: '#005B2B',
-    medium: '#d97706',
-    high: '#dc2626',
+    low: 'var(--green-600)',
+    medium: 'var(--yellow-600)',
+    high: 'var(--red-600)',
   }
 
   const RISK_LABELS: Record<string, string> = {
@@ -85,8 +86,11 @@ export default function SimulatorPage() {
     <AnalystLayout>
       <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1f2328' }}>⚙️ Simulador Técnico</h1>
-          <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+            <Settings2 size={22} style={{ color: 'var(--text-secondary)' }} />
+            Simulador Técnico
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Cenários de demonstração acadêmica — IBM AI Experiential Learning Lab 2026
           </p>
         </div>
@@ -95,16 +99,17 @@ export default function SimulatorPage() {
           onClick={handleReset}
           disabled={resetting}
         >
-          {resetting ? <Spinner size={16} /> : '🔄'} Resetar Banco de Dados
+          {resetting ? <Spinner size={16} /> : <RefreshCw size={15} />} Resetar Banco de Dados
         </Button>
       </div>
 
       <div style={{
-        background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8,
+        background: 'var(--yellow-100)', border: '1px solid var(--yellow-200)', borderRadius: 'var(--radius-sm)',
         padding: '0.75rem 1rem', marginBottom: '1.5rem',
       }}>
-        <p style={{ fontSize: '0.85rem', color: '#92400e', margin: 0 }}>
-          ⚠️ <strong>Ambiente de Demonstração Acadêmica.</strong> Este simulador prepara dados fictícios controlados
+        <p style={{ fontSize: '0.85rem', color: 'var(--yellow-600)', margin: 0 }}>
+          <AlertTriangle size={14} style={{ display: 'inline', marginRight: '0.25rem', verticalAlign: 'middle' }} />{' '}
+          <strong>Ambiente de Demonstração Acadêmica.</strong> Este simulador prepara dados fictícios controlados
           para apresentações. O motor antifraude real é sempre executado — não há resultados artificiais.
           Todas as ações são auditadas.
         </p>
@@ -124,44 +129,45 @@ export default function SimulatorPage() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
           {scenarios.map((s) => (
-            <Card key={s.id} style={{ border: activeScenario === s.id ? '2px solid #005B2B' : '1px solid #e5e7eb' }}>
+            <Card key={s.id} style={{ border: activeScenario === s.id ? `2px solid var(--green-600)` : '1px solid var(--border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
                     <span style={{
-                      background: '#1f2328', color: '#fff',
-                      borderRadius: 6, padding: '0.15rem 0.5rem',
+                      background: 'var(--surface-3)', color: 'var(--text-primary)',
+                      borderRadius: 'var(--radius-sm)', padding: '0.15rem 0.5rem',
                       fontWeight: 700, fontSize: '0.82rem',
+                      border: '1px solid var(--border)',
                     }}>
                       Cenário {s.id}
                     </span>
                     <span style={{
-                      color: RISK_COLORS[s.expected_risk] || '#1f2328',
+                      color: RISK_COLORS[s.expected_risk] || 'var(--text-primary)',
                       fontWeight: 700, fontSize: '0.78rem',
                     }}>
                       {RISK_LABELS[s.expected_risk] || s.expected_risk}
                     </span>
                   </div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#1f2328' }}>{s.name}</h3>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{s.name}</h3>
                 </div>
               </div>
 
-              <p style={{ fontSize: '0.875rem', color: '#4b5563', marginBottom: '1rem', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
                 {s.description}
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
                 <div>
-                  <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '0 0 0.15rem' }}>Associado</p>
-                  <p style={{ fontWeight: 600, fontSize: '0.85rem' }}>@{s.associate}</p>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '0 0 0.15rem' }}>Associado</p>
+                  <p style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)' }}>@{s.associate}</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '0 0 0.15rem' }}>Valor</p>
-                  <p style={{ fontWeight: 600, fontSize: '0.85rem' }}>R$ {s.amount}</p>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '0 0 0.15rem' }}>Valor</p>
+                  <p style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)' }}>R$ {s.amount}</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: '0.72rem', color: '#9ca3af', margin: '0 0 0.15rem' }}>Destinatário</p>
-                  <p style={{ fontWeight: 600, fontSize: '0.85rem' }}>{s.recipient}</p>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '0 0 0.15rem' }}>Destinatário</p>
+                  <p style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)' }}>{s.recipient}</p>
                 </div>
               </div>
 
@@ -171,8 +177,8 @@ export default function SimulatorPage() {
                 fullWidth
                 variant={activeScenario === s.id ? 'secondary' : 'primary'}
               >
-                {preparing === s.id ? <Spinner size={16} /> : null}
-                {preparing === s.id ? 'Preparando...' : '▶ Preparar Cenário'}
+                {preparing === s.id ? <Spinner size={16} /> : <Play size={14} />}
+                {preparing === s.id ? 'Preparando...' : 'Preparar Cenário'}
               </Button>
             </Card>
           ))}
@@ -182,8 +188,9 @@ export default function SimulatorPage() {
       {/* Instructions */}
       {activeScenario && instructions.length > 0 && (
         <Card style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ fontWeight: 700, color: '#1f2328', marginBottom: '1rem', fontSize: '1rem' }}>
-            📋 Roteiro — Cenário {activeScenario}
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1rem' }}>
+            <List size={17} style={{ color: 'var(--text-secondary)' }} />
+            Roteiro — Cenário {activeScenario}
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {instructions.map((step, i) => (
@@ -192,8 +199,9 @@ export default function SimulatorPage() {
                 style={{
                   display: 'flex', gap: '0.75rem', alignItems: 'flex-start',
                   padding: '0.6rem 0.75rem',
-                  background: '#f9fafb', borderRadius: 6,
-                  fontSize: '0.875rem', color: '#1f2328',
+                  background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)',
+                  fontSize: '0.875rem', color: 'var(--text-primary)',
+                  border: '1px solid var(--border)',
                 }}
               >
                 {step}

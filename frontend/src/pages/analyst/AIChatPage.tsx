@@ -10,6 +10,9 @@
  */
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Bot, ShieldAlert, MessageSquare, Pencil, Trash2, Send, Square } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import AnalystLayout from '../../components/layout/AnalystLayout'
 import { Card, Spinner, AlertBox, RiskBadge, formatCurrency, Modal } from '../../components/ui/index'
 import {
@@ -296,7 +299,7 @@ export default function AIChatPage() {
     setDeleteConfirm(null)
   }
 
-  const aiStatusColor = { available: '#22c55e', unavailable: '#ef4444', checking: '#f59e0b', processing: '#3b82f6' }[aiStatus]
+  const aiStatusColor = { available: 'var(--green-600)', unavailable: 'var(--red-600)', checking: 'var(--yellow-600)', processing: 'var(--blue-600)' }[aiStatus]
   const aiStatusLabel = { available: 'Disponível', unavailable: 'Indisponível', checking: 'Verificando...', processing: 'Processando...' }[aiStatus]
   const suggestions = selectedAlert ? SUGGESTED_TRANSACTION : SUGGESTED_GENERAL
 
@@ -314,7 +317,7 @@ export default function AIChatPage() {
           />
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
             <button onClick={() => setRenamingSession(null)} style={{ padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: 8, background: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>Cancelar</button>
-            <button onClick={handleRename} style={{ padding: '0.5rem 1rem', border: 'none', borderRadius: 8, background: '#005B2B', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>Salvar</button>
+            <button onClick={handleRename} style={{ padding: '0.5rem 1rem', border: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--green-600)', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>Salvar</button>
           </div>
         </Modal>
       )}
@@ -325,14 +328,17 @@ export default function AIChatPage() {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>Excluir "{deleteConfirm.title}"? Esta ação não pode ser desfeita.</p>
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
             <button onClick={() => setDeleteConfirm(null)} style={{ padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: 8, background: 'none', cursor: 'pointer', color: 'var(--text-secondary)' }}>Cancelar</button>
-            <button onClick={handleDelete} style={{ padding: '0.5rem 1rem', border: 'none', borderRadius: 8, background: '#dc2626', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>Excluir</button>
+            <button onClick={handleDelete} style={{ padding: '0.5rem 1rem', border: 'none', borderRadius: 'var(--radius-sm)', background: 'var(--red-600)', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>Excluir</button>
           </div>
         </Modal>
       )}
 
       <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>🤖 Guardião AI — Copiloto Antifraude</h1>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+            <Bot size={22} style={{ color: 'var(--green-600)' }} />
+            Guardião AI — Copiloto Antifraude
+          </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
             Assistente de investigação — dados autorizados da sua carteira
           </p>
@@ -352,15 +358,15 @@ export default function AIChatPage() {
 
       {error && <AlertBox type="error" message={error} onClose={() => setError('')} style={{ marginBottom: '1rem' }} />}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1.25rem', height: 'calc(100vh - 210px)' }}>
+      <div className="ai-chat-grid" style={{ height: 'calc(100vh - 210px)' }}>
 
         {/* Left sidebar */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflow: 'hidden' }}>
           {/* New chat + tabs */}
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button onClick={startFreeSession} style={{
-              flex: 1, padding: '0.5rem', background: '#005B2B', color: '#fff',
-              border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
+              flex: 1, padding: '0.5rem', background: 'var(--green-600)', color: '#fff',
+              border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600,
             }}>+ Nova conversa</button>
           </div>
 
@@ -369,10 +375,13 @@ export default function AIChatPage() {
             {(['alerts', 'sessions'] as const).map((tab) => (
               <button key={tab} onClick={() => setSidebarTab(tab)} style={{
                 flex: 1, padding: '0.45rem', border: 'none', cursor: 'pointer', fontSize: '0.78rem', fontWeight: sidebarTab === tab ? 700 : 400,
-                background: 'none', color: sidebarTab === tab ? '#005B2B' : 'var(--text-secondary)',
-                borderBottom: sidebarTab === tab ? '2px solid #005B2B' : '2px solid transparent',
+                background: 'none', color: sidebarTab === tab ? 'var(--green-600)' : 'var(--text-secondary)',
+                borderBottom: sidebarTab === tab ? '2px solid var(--green-600)' : '2px solid transparent',
               }}>
-                {tab === 'alerts' ? '⚠ Alertas' : '💬 Conversas'}
+                {tab === 'alerts'
+                  ? <><ShieldAlert size={13} style={{ marginRight: '0.3rem' }} />Alertas</>
+                  : <><MessageSquare size={13} style={{ marginRight: '0.3rem' }} />Conversas</>
+                }
               </button>
             ))}
           </div>
@@ -383,9 +392,9 @@ export default function AIChatPage() {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', textAlign: 'center', padding: '1rem' }}>Nenhum alerta disponível.</p>
               ) : alerts.map((a) => (
                 <button key={a.id} onClick={() => startSessionForAlert(a)} style={{
-                  background: selectedAlert?.id === a.id ? '#e8f5ee' : 'var(--surface)',
-                  border: `1px solid ${selectedAlert?.id === a.id ? '#005B2B' : 'var(--border)'}`,
-                  borderRadius: 8, padding: '0.6rem 0.75rem', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s', width: '100%',
+                  background: selectedAlert?.id === a.id ? 'var(--green-100)' : 'var(--surface)',
+                  border: `1px solid ${selectedAlert?.id === a.id ? 'var(--green-600)' : 'var(--border)'}`,
+                  borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.75rem', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s', width: '100%',
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.2rem' }}>
                     <span style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 130 }}>{a.associate_name}</span>
@@ -401,9 +410,9 @@ export default function AIChatPage() {
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', textAlign: 'center', padding: '1rem' }}>Nenhuma conversa salva.</p>
               ) : sessions.map((s) => (
                 <div key={s.id} style={{
-                  background: selectedSession?.id === s.id ? '#e8f5ee' : 'var(--surface)',
-                  border: `1px solid ${selectedSession?.id === s.id ? '#005B2B' : 'var(--border)'}`,
-                  borderRadius: 8, overflow: 'hidden',
+                  background: selectedSession?.id === s.id ? 'var(--green-100)' : 'var(--surface)',
+                  border: `1px solid ${selectedSession?.id === s.id ? 'var(--green-600)' : 'var(--border)'}`,
+                  borderRadius: 'var(--radius-sm)', overflow: 'hidden',
                 }}>
                   <button onClick={() => loadSession(s)} style={{
                     width: '100%', padding: '0.6rem 0.75rem', cursor: 'pointer', textAlign: 'left',
@@ -413,8 +422,8 @@ export default function AIChatPage() {
                     <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{s.message_count} mensagens</div>
                   </button>
                   <div style={{ display: 'flex', borderTop: '1px solid var(--border)' }}>
-                    <button onClick={() => { setRenamingSession(s); setRenameValue(s.title) }} style={{ flex: 1, padding: '0.3rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)' }}>✏ Renomear</button>
-                    <button onClick={() => setDeleteConfirm(s)} style={{ flex: 1, padding: '0.3rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.7rem', color: '#ef4444' }}>🗑 Excluir</button>
+                    <button onClick={() => { setRenamingSession(s); setRenameValue(s.title) }} style={{ flex: 1, padding: '0.3rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}><Pencil size={11} />Renomear</button>
+                    <button onClick={() => setDeleteConfirm(s)} style={{ flex: 1, padding: '0.3rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.7rem', color: 'var(--red-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}><Trash2 size={11} />Excluir</button>
                   </div>
                 </div>
               ))
@@ -426,7 +435,7 @@ export default function AIChatPage() {
         <Card style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', padding: 0 }}>
           {!selectedSession ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: 'var(--text-secondary)', padding: '2rem' }}>
-              <div style={{ fontSize: '3rem' }}>🤖</div>
+              <Bot size={52} style={{ color: 'var(--green-600)', opacity: 0.7 }} />
               <p style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Guardião AI — Copiloto Antifraude</p>
               <p style={{ fontSize: '0.875rem', textAlign: 'center', maxWidth: 400 }}>
                 Selecione um alerta à esquerda para analisar uma transação específica, ou inicie uma nova conversa geral.
@@ -444,22 +453,22 @@ export default function AIChatPage() {
           ) : (
             <>
               {/* Header */}
-              <div style={{ padding: '0.75rem 1.25rem', borderBottom: '1px solid var(--border)', background: '#1a1f2e', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ padding: '0.75rem 1.25rem', borderBottom: '1px solid var(--border)', background: 'var(--sidebar-analyst-bg)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <span style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem' }}>{selectedSession.title}</span>
+                  <span style={{ color: 'var(--sidebar-analyst-text)', fontWeight: 700, fontSize: '0.9rem' }}>{selectedSession.title}</span>
                   {selectedAlert && (
-                    <span style={{ marginLeft: '0.75rem', fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>
+                    <span style={{ marginLeft: '0.75rem', fontSize: '0.72rem', color: 'var(--sidebar-analyst-muted)' }}>
                       Score: {selectedAlert.risk_score}/100 · {selectedAlert.risk_level}
                     </span>
                   )}
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   {aiProvider && (
-                    <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.35)', background: 'rgba(255,255,255,0.08)', padding: '0.2rem 0.5rem', borderRadius: 10 }}>
+                    <span style={{ fontSize: '0.68rem', color: 'var(--sidebar-analyst-muted)', background: 'rgba(255,255,255,0.07)', padding: '0.2rem 0.5rem', borderRadius: 10 }}>
                       {aiProvider}
                     </span>
                   )}
-                  <button onClick={() => { setSelectedSession(null); setMessages([]); setSelectedAlert(null) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: '0.8rem' }}>
+                  <button onClick={() => { setSelectedSession(null); setMessages([]); setSelectedAlert(null) }} style={{ background: 'none', border: 'none', color: 'var(--sidebar-analyst-muted)', cursor: 'pointer', fontSize: '0.8rem' }}>
                     Nova análise
                   </button>
                 </div>
@@ -485,20 +494,24 @@ export default function AIChatPage() {
                 {messages.map((m) => (
                   <div key={m.id} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', gap: '0.5rem', alignItems: 'flex-start' }}>
                     {m.role === 'assistant' && (
-                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#005B2B', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0, marginTop: 2 }}>🤖</div>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--green-600)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}><Bot size={15} /></div>
                     )}
                     <div style={{
                       maxWidth: '82%', padding: '0.65rem 0.9rem',
                       borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                      background: m.role === 'user' ? '#005B2B' : 'var(--surface-2)',
+                      background: m.role === 'user' ? 'var(--green-600)' : 'var(--surface-2)',
                       color: m.role === 'user' ? '#fff' : 'var(--text-primary)',
-                      fontSize: '0.875rem', lineHeight: 1.6, whiteSpace: 'pre-wrap',
+                      fontSize: '0.875rem', lineHeight: 1.6,
                       border: m.role === 'assistant' ? '1px solid var(--border)' : 'none',
                     }}>
-                      {m.content}
+                      {m.role === 'assistant' ? (
+                        <div className="guardiao-md">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
+                        </div>
+                      ) : m.content}
                     </div>
                     {m.role === 'user' && (
-                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#374151', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', flexShrink: 0, marginTop: 2 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--surface-3)', color: 'var(--text-primary)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', flexShrink: 0, marginTop: 2 }}>
                         {user?.full_name?.charAt(0) || 'A'}
                       </div>
                     )}
@@ -508,16 +521,19 @@ export default function AIChatPage() {
                 {/* Streaming indicator */}
                 {streaming && (
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#005B2B', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0, marginTop: 2 }}>🤖</div>
-                    <div style={{ maxWidth: '82%', padding: '0.65rem 0.9rem', borderRadius: '12px 12px 12px 2px', background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: '0.875rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', color: 'var(--text-primary)' }}>
-                      {streamingText || (
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--green-600)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}><Bot size={15} /></div>
+                    <div style={{ maxWidth: '82%', padding: '0.65rem 0.9rem', borderRadius: '12px 12px 12px 2px', background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--text-primary)' }}>
+                      {streamingText ? (
+                        <div className="guardiao-md">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{streamingText}</ReactMarkdown>
+                        </div>
+                      ) : (
                         <span style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
                           {[0, 0.15, 0.3].map((d) => (
                             <span key={d} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--text-muted)', animation: 'pulse 1s ease infinite', animationDelay: `${d}s`, display: 'inline-block' }} />
                           ))}
                         </span>
                       )}
-                      {streamingText && <span style={{ display: 'inline-block', width: 2, height: '1em', background: '#005B2B', marginLeft: 1, animation: 'pulse 0.8s ease infinite', verticalAlign: 'text-bottom' }} />}
                     </div>
                   </div>
                 )}
@@ -548,15 +564,16 @@ export default function AIChatPage() {
                   />
                   {streaming ? (
                     <button onClick={cancelStream} style={{
-                      padding: '0.6rem 0.9rem', background: '#dc2626', color: '#fff',
-                      border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', flexShrink: 0,
-                    }}>⏹ Parar</button>
+                      padding: '0.6rem 0.9rem', background: 'var(--red-600)', color: '#fff',
+                      border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', flexShrink: 0,
+                      display: 'flex', alignItems: 'center', gap: '0.3rem',
+                    }}><Square size={13} /> Parar</button>
                   ) : (
                     <button onClick={() => sendMsg()} disabled={!input.trim()} style={{
-                      padding: '0.6rem 1rem', background: input.trim() ? '#005B2B' : 'var(--surface-3)',
-                      color: '#fff', border: 'none', borderRadius: 10, cursor: input.trim() ? 'pointer' : 'not-allowed',
-                      fontWeight: 600, flexShrink: 0,
-                    }}>→</button>
+                      padding: '0.6rem 1rem', background: input.trim() ? 'var(--green-600)' : 'var(--surface-3)',
+                      color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', cursor: input.trim() ? 'pointer' : 'not-allowed',
+                      fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}><Send size={15} /></button>
                   )}
                 </div>
                 <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.35rem', textAlign: 'center' }}>

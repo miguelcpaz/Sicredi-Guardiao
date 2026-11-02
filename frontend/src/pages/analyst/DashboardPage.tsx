@@ -8,17 +8,19 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend,
 } from 'recharts'
+import { CreditCard, Banknote, ShieldAlert, Lock, Ban, Search, Bell } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import AnalystLayout from '../../components/layout/AnalystLayout'
 import { Card, Spinner, AlertBox, RiskBadge, formatCurrency, formatDate } from '../../components/ui/index'
 import { getAnalystDashboard } from '../../api/client'
 import type { AnalystDashboard } from '../../api/client'
 
 const RISK_COLORS: Record<string, string> = {
-  low: '#005B2B',
+  low: '#3fa535',
   medium: '#d97706',
   high: '#dc2626',
 }
-const PIE_COLORS = ['#005B2B', '#d97706', '#dc2626', '#2563eb', '#7c3aed']
+const PIE_COLORS = ['#3fa535', '#d97706', '#dc2626', '#2563eb', '#7c3aed']
 
 const STATUS_LABELS: Record<string, string> = {
   approved: 'Aprovadas',
@@ -32,13 +34,13 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 function MetricCard({
-  label, value, sub, color, icon,
+  label, value, sub, color, Icon,
 }: {
   label: string
   value: string | number
   sub?: string
   color?: string
-  icon?: string
+  Icon?: LucideIcon
 }) {
   return (
     <Card style={{ padding: '1rem' }}>
@@ -48,7 +50,7 @@ function MetricCard({
           <div style={{ fontSize: '1.6rem', fontWeight: 700, color: color || 'var(--text-primary)' }}>{value}</div>
           {sub && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>{sub}</div>}
         </div>
-        {icon && <span style={{ fontSize: '1.5rem', opacity: 0.7 }}>{icon}</span>}
+        {Icon && <Icon size={22} style={{ opacity: 0.55, color: color || 'var(--text-secondary)', flexShrink: 0 }} />}
       </div>
     </Card>
   )
@@ -121,41 +123,41 @@ export default function AnalystDashboardPage() {
       </div>
 
       {/* Key metrics row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '1.75rem' }}>
-        <MetricCard label="Transações" value={data?.total_transactions ?? 0} icon="💳" />
+      <div className="cards-grid" style={{ marginBottom: '1.75rem' }}>
+        <MetricCard label="Transações" value={data?.total_transactions ?? 0} Icon={CreditCard} />
         <MetricCard
           label="Volume Total"
           value={formatCurrency(data?.total_volume ?? 0)}
-          icon="💰"
+          Icon={Banknote}
           sub="monitorado"
         />
         <MetricCard
           label="Alertas Pendentes"
           value={data?.pending_alerts ?? 0}
           color={(data?.pending_alerts ?? 0) > 0 ? 'var(--yellow-600)' : 'var(--text-primary)'}
-          icon="⚠️"
+          Icon={ShieldAlert}
           sub={(data?.pending_alerts ?? 0) > 0 ? 'Requer atenção' : 'Sem pendências'}
         />
         <MetricCard
           label="Em Verificação"
           value={data?.retained_transactions ?? 0}
           color={(data?.retained_transactions ?? 0) > 0 ? 'var(--yellow-600)' : 'var(--text-primary)'}
-          icon="🔒"
+          Icon={Lock}
         />
         <MetricCard
           label="Bloqueadas"
           value={data?.blocked_transactions ?? 0}
           color={(data?.blocked_transactions ?? 0) > 0 ? 'var(--red-600)' : 'var(--text-primary)'}
-          icon="🚫"
+          Icon={Ban}
         />
         <MetricCard
           label="Investigações"
           value={data?.investigating_count ?? 0}
           color={(data?.investigating_count ?? 0) > 0 ? 'var(--blue-600)' : 'var(--text-primary)'}
-          icon="🔎"
+          Icon={Search}
           sub={`${data?.resolved_count ?? 0} encerradas`}
         />
-        <MetricCard label="Notificações" value={data?.unread_notifications ?? 0} icon="🔔" sub="não lidas" />
+        <MetricCard label="Notificações" value={data?.unread_notifications ?? 0} Icon={Bell} sub="não lidas" />
       </div>
 
       {/* Quick actions */}
@@ -184,7 +186,7 @@ export default function AnalystDashboardPage() {
       </div>
 
       {/* Charts row — time series + risk distribution */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '1.75rem' }}>
+      <div className="charts-row" style={{ marginBottom: '1.75rem' }}>
         {/* Daily transaction volume */}
         <Card>
           <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '0.95rem' }}>
@@ -239,7 +241,7 @@ export default function AnalystDashboardPage() {
       </div>
 
       {/* Charts row — score bar + status pie */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginBottom: '1.75rem' }}>
+      <div className="charts-row" style={{ marginBottom: '1.75rem' }}>
         {/* Risk scores of recent alerts */}
         <Card>
           <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '0.95rem' }}>
@@ -305,8 +307,8 @@ export default function AnalystDashboardPage() {
               Ver todos →
             </button>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+          <div className="table-responsive">
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', minWidth: 480 }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   {['Associado', 'Estabelecimento', 'Valor', 'Risco', 'Status', 'Data'].map((h) => (

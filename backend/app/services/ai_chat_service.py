@@ -58,6 +58,11 @@ ANÁLISE DE RISCO (calculada pelo motor de regras — IMUTÁVEL, não modifique)
 HISTÓRICO DE INVESTIGAÇÃO:
 {investigation_context}
 
+FORMATAÇÃO DAS RESPOSTAS:
+- Use Markdown para organizar respostas complexas: **negrito** para informações críticas, ## títulos para seções, listas para recomendações e tabelas para comparar dados.
+- Para respostas simples ou curtas, use texto corrido sem formatação excessiva.
+- Parágrafos curtos facilitam a leitura.
+
 REGRAS OBRIGATÓRIAS — NUNCA VIOLE:
 1. Não invente dados ausentes neste contexto.
 2. Não modifique, arredonde nem questione o score calculado pelo motor.
@@ -77,6 +82,7 @@ Você auxilia analistas humanos a investigar transações suspeitas.
 
 Responda perguntas sobre investigação de fraudes de forma objetiva.
 Responda sempre em português do Brasil.
+Use Markdown quando útil: **negrito** para destaques, listas para enumerar pontos, tabelas para comparar dados. Para respostas curtas, use texto simples.
 
 REGRAS OBRIGATÓRIAS:
 1. Não invente dados que não estão neste contexto.
@@ -90,6 +96,12 @@ Você auxilia associados a entender suas transações e se proteger de fraudes e
 
 CONTEXTO DO ASSOCIADO (use apenas quando relevante para a resposta):
 {associate_context}
+
+FORMATAÇÃO DAS RESPOSTAS:
+- Use linguagem simples e acolhedora.
+- Para respostas curtas, use texto corrido sem formatação extra.
+- Para explicações com múltiplos passos ou comparações, use listas ou **negrito** para destacar o essencial.
+- Não use títulos grandes (##) em respostas curtas.
 
 REGRAS OBRIGATÓRIAS:
 1. Use linguagem simples, acolhedora e acessível.
@@ -742,16 +754,18 @@ def _call_provider(messages: list[dict]) -> tuple[str, str]:
             ), "unavailable"
 
     if provider_name == "groq":
-        if not settings.GROQ_API_KEY:
+        api_key = (settings.GROQ_API_KEY or "").strip()
+        if not api_key:
             return (
                 "⚠️ **Guardião AI indisponível**\n\n"
                 "A chave GROQ_API_KEY não está configurada."
             ), "unavailable"
+
         try:
             response = httpx.post(
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={
-                    "Authorization": f"Bearer {settings.GROQ_API_KEY}",
+                    "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json",
                 },
                 json={
@@ -763,11 +777,40 @@ def _call_provider(messages: list[dict]) -> tuple[str, str]:
                 timeout=settings.GROQ_TIMEOUT_SECONDS,
             )
             response.raise_for_status()
-            return response.json()["choices"][0]["message"]["content"], "groq"
-        except Exception as e:
-            logger.error("Groq error: %s", type(e).__name__)
+            reply = response.json()["choices"][0]["message"]["content"]
+            return reply, "groq"
+
+        except httpx.HTTPStatusError as e:
+            status = e.response.status_code
+            logger.error("Groq HTTP error: status=%s", status)
+            if status == 401:
+                return (
+                    "⚠️ **Erro de autenticação da Groq**\n\n"
+                    "A chave da API é inválida ou foi revogada. "
+                    "Verifique GROQ_API_KEY."
+                ), "unavailable"
+            if status == 429:
+                return (
+                    "⚠️ **Limite de requisições atingido**\n\n"
+                    "Aguarde alguns instantes e tente novamente."
+                ), "quota_exceeded"
             return (
-                "⚠️ O serviço Guardião AI está momentaneamente indisponível. Tente novamente."
+                "⚠️ **Guardião AI indisponível**\n\n"
+                f"A Groq retornou um erro HTTP {status}."
+            ), "unavailable"
+
+        except httpx.RequestError as e:
+            logger.error("Groq connection error: %s", type(e).__name__)
+            return (
+                "⚠️ **Erro de conexão com a Groq**\n\n"
+                "Não foi possível acessar o serviço de IA."
+            ), "unavailable"
+
+        except Exception as e:
+            logger.error("Groq unexpected error: %s", type(e).__name__)
+            return (
+                "⚠️ **Guardião AI com instabilidade**\n\n"
+                "Ocorreu um erro ao processar sua solicitação."
             ), "unavailable"
 
     # Unknown provider
