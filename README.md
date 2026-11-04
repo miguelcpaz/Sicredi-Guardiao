@@ -17,7 +17,7 @@ React + TypeScript (Frontend)
         ▼
 FastAPI (Backend)
   ├── Motor antifraude (regras determinísticas — score imutável)
-  ├── Gemini AI (análise, chat, investigação agêntica)
+  ├── Groq AI (análise, chat, investigação agêntica)
   │     └── Function Calling → Agent Tools (validados pelo backend)
   ├── SQLite (local/dev) / PostgreSQL Neon (produção)
   └── Alembic (migrations)
@@ -33,11 +33,11 @@ FastAPI (Backend)
 - Score calculado pelo motor é **imutável** — a IA nunca o modifica
 - Correção na V2: R04 (frequência) agora conta transações reais na janela de 1 hora
 
-### Guardião AI — Google Gemini
+### Guardião AI — Groq (llama-3.1-8b-instant)
 - Chat do analista com contexto de transação, perfil comportamental e histórico de investigação
 - Chat do associado com contexto limitado (sem scores internos)
 - Streaming SSE com indicação de provedor
-- Fallback claro quando Gemini indisponível ou cota gratuita esgotada
+- Fallback claro quando Groq indisponível ou cota gratuita esgotada
 
 ### IA Agêntica (Function Calling)
 - Analistas fazem perguntas em linguagem natural e o agente consulta dados reais
@@ -60,7 +60,7 @@ FastAPI (Backend)
 
 - Python 3.10+ instalado
 - Node.js 18+ instalado (para o frontend)
-- Conta Google AI Studio (gratuita) para obter `GEMINI_API_KEY`
+- Conta Groq (gratuita) para obter `GROQ_API_KEY`
 
 ### 2. Backend
 
@@ -74,7 +74,7 @@ pip install -r requirements.txt
 # Configurar variáveis de ambiente
 Copy-Item .env.example .env
 # Edite .env e configure:
-#   GEMINI_API_KEY=sua-chave-aqui
+#   GROQ_API_KEY=sua-chave-aqui
 #   (opcional) DATABASE_URL para Neon
 
 # Iniciar
@@ -93,24 +93,24 @@ Acesse: http://localhost:5173
 
 ---
 
-## Configuração do Google Gemini (Gratuito)
+## Configuração do Groq (Gratuito)
 
-1. Acesse https://aistudio.google.com/apikey
-2. Faça login com uma conta Google (sem cartão de crédito)
-3. Clique em **Create API Key**
+1. Acesse https://console.groq.com
+2. Faça login (sem cartão de crédito)
+3. Clique em **API Keys → Create API Key**
 4. Copie a chave e adicione ao `backend/.env`:
    ```
-   GEMINI_API_KEY=AIzaSy...sua-chave-aqui
-   AI_PROVIDER=gemini
-   GEMINI_MODEL=gemini-2.0-flash-lite
+   GROQ_API_KEY=gsk_...sua-chave-aqui
+   AI_PROVIDER=groq
+   GROQ_MODEL=llama-3.1-8b-instant
    ```
 5. Reinicie o backend
 
-**Modelo recomendado:** `gemini-2.0-flash-lite` — disponível na camada gratuita, suporta function calling, rápido e adequado para análise de fraudes.
+**Modelo recomendado:** `llama-3.1-8b-instant` — disponível na camada gratuita, baixa latência, adequado para análise de fraudes e chat conversacional.
 
-**Limites da camada gratuita (verificar em aistudio.google.com):**
-- ~1500 requisições/dia (mais que suficiente para demonstração)
-- O sistema trata HTTP 429 com backoff exponencial e informa a cota ao usuário
+**Limites da camada gratuita (verificar em console.groq.com):**
+- ~14.400 requisições/dia e 6.000 tokens/minuto no plano gratuito (mais que suficiente para demonstração)
+- O sistema trata HTTP 429 e informa a cota ao usuário
 
 ---
 
@@ -262,7 +262,7 @@ Resposta:
 ```json
 {
   "answer": "...",
-  "provider": "gemini",
+  "provider": "groq",
   "tool_calls": [
     {"tool_name": "get_transaction_details", "args": {...}, "result": {...}},
     {"tool_name": "get_related_alerts", "args": {...}, "result": {...}}
@@ -299,7 +299,7 @@ GET /health   # status, versão, provedor AI, banco
 
 ---
 
-## Ferramentas Disponibilizadas ao Gemini
+## Ferramentas Disponibilizadas ao Guardião AI
 
 ### Leitura (analista/admin)
 | Ferramenta | Descrição |
@@ -339,7 +339,7 @@ cd backend
 # Suite completa (exceto integrações externas)
 python -m pytest tests/ -q --ignore=tests/test_ollama_integration.py
 
-# Apenas testes do Gemini e agente
+# Apenas testes do agente e providers
 python -m pytest tests/test_gemini_provider.py -v
 
 # Apenas motor antifraude
@@ -353,7 +353,7 @@ python -m pytest tests/test_authorization.py -v
 
 Testes que exigem credenciais externas:
 - `test_ollama_integration.py` — ignorado automaticamente se Ollama não estiver rodando
-- Testes de integração real com Gemini — requerem `GEMINI_API_KEY` configurada (não incluídos na suite automática)
+- Testes de integração real com Groq — requerem `GROQ_API_KEY` configurada (não incluídos na suite automática)
 
 ---
 
@@ -363,13 +363,15 @@ Testes que exigem credenciais externas:
 |----------|--------|-----------|
 | `DATABASE_URL` | `sqlite:///./guardiao_v2.db` | URL do banco |
 | `SECRET_KEY` | *(obrigatório mudar)* | Chave JWT |
-| `AI_PROVIDER` | `gemini` | Provedor: gemini/mock/groq/ollama |
-| `GEMINI_API_KEY` | *(vazio)* | Chave Google AI Studio |
-| `GEMINI_MODEL` | `gemini-2.0-flash-lite` | Modelo Gemini |
-| `GEMINI_TIMEOUT_SECONDS` | `30` | Timeout da API |
-| `GEMINI_MAX_OUTPUT_TOKENS` | `1024` | Limite de tokens |
-| `GEMINI_MAX_CALLS_PER_SESSION` | `50` | Proteção de cota |
-| `GROQ_API_KEY` | *(vazio)* | Chave Groq (opcional) |
+| `AI_PROVIDER` | `groq` | Provedor: groq/mock/gemini/ollama |
+| `GROQ_API_KEY` | *(vazio)* | Chave Groq (console.groq.com) |
+| `GROQ_MODEL` | `llama-3.1-8b-instant` | Modelo Groq |
+| `GROQ_TIMEOUT_SECONDS` | `15` | Timeout da API |
+| `GEMINI_API_KEY` | *(vazio)* | Chave Google AI Studio (opcional) |
+| `GEMINI_MODEL` | `gemini-2.0-flash-lite` | Modelo Gemini (opcional) |
+| `GEMINI_TIMEOUT_SECONDS` | `30` | Timeout da API Gemini |
+| `GEMINI_MAX_OUTPUT_TOKENS` | `1024` | Limite de tokens Gemini |
+| `GEMINI_MAX_CALLS_PER_SESSION` | `50` | Proteção de cota Gemini |
 | `OLLAMA_URL` | `http://localhost:11434` | URL Ollama (opcional) |
 | `CORS_ORIGINS` | `["http://localhost:5173"]` | Origens CORS |
 | `DEBUG` | `false` | Log verboso |
@@ -384,22 +386,22 @@ Testes que exigem credenciais externas:
 | `backend/app/services/agent_tools.py` | Catálogo de ferramentas agênticas (leitura + intervenção) |
 | `backend/app/api/v1/agent.py` | Endpoint `/agent/investigate` com loop agêntico |
 | `backend/migrations/` | Configuração Alembic + migração inicial completa |
-| `backend/tests/test_gemini_provider.py` | 30 testes: Gemini, agente, autorização, segurança |
+| `backend/tests/test_gemini_provider.py` | 30 testes: providers, agente, autorização, segurança |
 
 ### Modificados
 | Arquivo | O que mudou |
 |---------|-------------|
-| `backend/app/core/config.py` | Adicionadas configurações Gemini; AI_PROVIDER padrão = gemini |
+| `backend/app/core/config.py` | AI_PROVIDER padrão = groq; Groq como provider principal |
 | `backend/app/providers/ai_provider.py` | GeminiProvider com function calling, backoff, extração de texto |
-| `backend/app/services/ai_chat_service.py` | Suporte Gemini, streaming por chunks, check_ai_status, _messages_to_gemini_format |
+| `backend/app/services/ai_chat_service.py` | Suporte Groq/Gemini, streaming por chunks, check_ai_status |
 | `backend/app/services/fraud_service.py` | Correção R04: conta transações reais na janela de 1h |
 | `backend/app/db/database.py` | Suporte PostgreSQL/Neon com pool_pre_ping, pool_recycle |
 | `backend/app/db/seed.py` | Caso 7 (DEMO IBM AI Lab — Carlos R$5.800, 100/100, 6 fatores) |
-| `backend/app/api/v1/ai_chat.py` | /ai/status usa check_ai_status (suporta Gemini/Groq/Ollama/Mock) |
+| `backend/app/api/v1/ai_chat.py` | /ai/status usa check_ai_status (suporta Groq/Gemini/Ollama/Mock) |
 | `backend/app/main.py` | Registra router do agente; health check com status do banco |
 | `backend/requirements.txt` | Adicionados: psycopg>=3.1.0, alembic>=1.13.0 |
-| `backend/.env.example` | Configurações Gemini + Neon + instruções |
-| `.env.example` | Atualizado para V2 com Gemini |
+| `backend/.env.example` | Groq como provider principal + instruções |
+| `.env.example` | Atualizado para V2 com Groq como padrão |
 | `backend/tests/test_fraud_engine.py` | Testes R04 frequency fix |
 | `backend/app/models/models.py` | Documentação PostgreSQL/SQLite compatibility |
 
@@ -407,8 +409,8 @@ Testes que exigem credenciais externas:
 
 ## Pendências que requerem credenciais externas
 
-1. **GEMINI_API_KEY** — integração real com Gemini não testada sem chave
-   - Obter em: https://aistudio.google.com/apikey (gratuito)
+1. **GROQ_API_KEY** — integração real com Groq não testada sem chave
+   - Obter em: https://console.groq.com (gratuito)
    - Configurar em `backend/.env`
 
 2. **DATABASE_URL para Neon** — PostgreSQL não testado sem connection string
@@ -426,7 +428,7 @@ Testes que exigem credenciais externas:
 ## Custo Financeiro
 
 **R$ 0,00** — todos os serviços utilizados são gratuitos:
-- Google Gemini: camada gratuita (sem faturamento)
+- Groq: camada gratuita (sem faturamento)
 - Neon PostgreSQL: Free Tier (sem cartão de crédito)
 - SQLite: embutido no Python
 - Alembic: open source
@@ -460,9 +462,9 @@ Testes que exigem credenciais externas:
 │                                                     │
 │  ┌─────────────────┐  ┌──────────────────────────┐ │
 │  │  Motor Antifraude│  │    Guardião AI Agent     │ │
-│  │  (Determinístico)│  │   (Google Gemini API)    │ │
-│  │  Score 0-100     │  │   Function Calling       │ │
-│  │  7 regras        │  │   Tool Loop (max 10)     │ │
+│  │  (Determinístico)│  │    (Groq API)            │ │
+│  │  Score 0-100     │  │    llama-3.1-8b-instant  │ │
+│  │  7 regras        │  │    Function Calling      │ │
 │  └────────┬────────┘  └──────────┬───────────────┘ │
 │           │Score imutável        │Ferramentas       │
 │  ┌────────▼─────────────────────▼───────────────┐  │
@@ -488,7 +490,7 @@ Testes que exigem credenciais externas:
 1. Associado submete transação → FastAPI persiste no banco
 2. `FraudRulesEngine.analyze()` calcula score determinístico (0–100) ← **IMUTÁVEL**
 3. Sistema registra `RiskAnalysis` com score + evidências + `provider="engine"`
-4. Gemini recebe contexto (transação + perfil + score) e gera explicação em linguagem natural
+4. Groq recebe contexto (transação + perfil + score) e gera explicação em linguagem natural
 5. Se score ≥ 30: cria `Alert`; se ≥ 70: cria `Incident` + bloqueia transação
 6. Notificação enviada ao associado e ao analista
 7. Analista usa Chat AI ou Agente para investigar, com ferramentas autorizadas

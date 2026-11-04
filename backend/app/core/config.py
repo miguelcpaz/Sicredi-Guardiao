@@ -19,15 +19,24 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480  # 8 hours for demo sessions
 
     # AI Provider
-    # Values: "mock" | "gemini" | "groq" | "ollama"
-    # Default is "gemini"; use "mock" for tests and offline demo
-    AI_PROVIDER: str = "gemini"
+    # Values: "mock" | "groq" | "gemini" | "ollama"
+    # Default is "groq"; use "mock" for tests and offline demo
+    AI_PROVIDER: str = "groq"
 
     # --------------------------------------------------------------------------
-    # Google Gemini (primary provider — free tier)
+    # Groq (primary provider — free tier)
+    # Get a free API key at: https://console.groq.com
+    # Model: llama-3.1-8b-instant — available on the free tier, fast and
+    #        suitable for fraud analysis chat.
+    # --------------------------------------------------------------------------
+    GROQ_API_KEY: Optional[str] = None  # Set via environment variable only
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
+    GROQ_TIMEOUT_SECONDS: int = 15
+
+    # --------------------------------------------------------------------------
+    # Google Gemini (optional alternative — free tier)
     # Get a free API key at: https://aistudio.google.com/apikey
-    # Model: gemini-2.0-flash-lite is available on the free tier and supports
-    #        function calling (tools) required for the agentic fraud workflow.
+    # Model: gemini-2.0-flash-lite supports function calling (agentic workflow).
     # --------------------------------------------------------------------------
     GEMINI_API_KEY: Optional[str] = None  # Set via environment variable only
     GEMINI_MODEL: str = "gemini-2.0-flash-lite"
@@ -35,11 +44,6 @@ class Settings(BaseSettings):
     GEMINI_MAX_OUTPUT_TOKENS: int = 1024
     # Daily quota guard: max AI calls per session to avoid burning free quota
     GEMINI_MAX_CALLS_PER_SESSION: int = 50
-
-    # Groq (optional fallback — kept for compatibility)
-    GROQ_API_KEY: Optional[str] = None
-    GROQ_MODEL: str = "llama-3.1-8b-instant"
-    GROQ_TIMEOUT_SECONDS: int = 15
 
     # Ollama (optional local inference — kept for compatibility)
     OLLAMA_URL: str = "http://localhost:11434"
